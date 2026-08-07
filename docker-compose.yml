@@ -21,7 +21,7 @@ services:
       - "3003"
     command: npm start
     env_file:
-      - .env
+      - /data-disk/applications/budget-app/.env
     environment:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
