@@ -1,3 +1,4 @@
+```yaml
 services:
   redis:
     image: redis:7-alpine
@@ -20,30 +21,19 @@ services:
     expose:
       - "3003"
     command: npm start
+
     env_file:
       - /data-disk/applications/budget-app/.env
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
-      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY}
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - JWT_SECRET=${JWT_SECRET}
-      - NODE_ENV=${NODE_ENV}
-      - NODE_TLS_REJECT_UNAUTHORIZED=${NODE_TLS_REJECT_UNAUTHORIZED}
-      - COOKIES_SECURE=${COOKIES_SECURE}
-      - NEXTAUTH_COOKIE_SECURE=${NEXTAUTH_COOKIE_SECURE}
-      - NEXTAUTH_USE_SECURE_COOKIES=${NEXTAUTH_USE_SECURE_COOKIES}
+
     deploy:
       resources:
         limits:
           memory: 2G
+
     depends_on:
       redis:
         condition: service_healthy
+
     volumes:
       - uploads-data:/app/uploads
       - ./docker-entrypoint.sh:/app/scripts/docker-entrypoint.sh
@@ -64,3 +54,4 @@ volumes:
     name: budget_redis_data
   uploads-data:
     name: budget_uploads_data
+```
