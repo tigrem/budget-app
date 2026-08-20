@@ -27,7 +27,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
 
     depends_on:
       redis:
@@ -36,6 +36,8 @@ services:
     volumes:
       - uploads-data:/app/uploads
       - ./docker-entrypoint.sh:/app/scripts/docker-entrypoint.sh
+    extra_hosts:                          # ← ADD THESE TWO LINES
+      - "deploy.ethiotelecom.et:196.189.51.118"   # ← ADD
 
   nginx-proxy:
     image: nginx:alpine
