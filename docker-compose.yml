@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
     user: "root"
     expose:
-      - "8080:3003"
+      - "3003"
     command: npm start
     env_file:
       - /data-disk/applications/budget-app/.env
