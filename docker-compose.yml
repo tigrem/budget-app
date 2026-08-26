@@ -27,6 +27,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    volumes:
+      - uploads-data:/app/uploads
     extra_hosts:
       - "deploy.ethiotelecom.et:196.189.51.118"
 
