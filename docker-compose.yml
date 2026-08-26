@@ -12,7 +12,6 @@ services:
       timeout: 3s
       retries: 5
 
-  # ─── NestJS API Backend (NEW) ───────────────────────────
   api:
     image: ghcr.io/yasterlij/budget-api:v2.0.6
     container_name: budget-api
@@ -25,18 +24,12 @@ services:
     environment:
       - API_PORT=4000
       - API_HOST=0.0.0.0
-      - CORS_ORIGIN=http://localhost:8080,http://127.0.0.1:8080
-    deploy:
-      resources:
-        limits:
-          memory: 2G
     depends_on:
       redis:
         condition: service_healthy
     extra_hosts:
       - "deploy.ethiotelecom.et:196.189.51.118"
 
-  # ─── Next.js Frontend ───────────────────────────────────
   app:
     image: ghcr.io/yasterlij/budget-app:v2.0.6
     container_name: budget-app
@@ -48,7 +41,6 @@ services:
     env_file:
       - /data-disk/applications/budget-app/.env
     environment:
-      # Tell Next.js to proxy /api/* to the NestJS API container
       - API_BACKEND_URL=http://api:4000
     deploy:
       resources:
@@ -65,7 +57,6 @@ services:
     extra_hosts:
       - "deploy.ethiotelecom.et:196.189.51.118"
 
-  # ─── BullMQ Workers (same image, different command) ────
   worker:
     image: ghcr.io/yasterlij/budget-app:v2.0.6
     container_name: budget-upload-workers
@@ -78,10 +69,6 @@ services:
       - NODE_ENV=production
       - WORKER_PROCESS=true
       - NODE_OPTIONS=--max-old-space-size=4096
-    deploy:
-      resources:
-        limits:
-          memory: 4G
     depends_on:
       redis:
         condition: service_healthy
@@ -90,7 +77,6 @@ services:
     extra_hosts:
       - "deploy.ethiotelecom.et:196.189.51.118"
 
-  # ─── Nginx Reverse Proxy ───────────────────────────────
   nginx-proxy:
     image: nginx:alpine
     container_name: budget-proxy
