@@ -12,33 +12,85 @@ services:
       timeout: 3s
       retries: 5
 
+  # ─── NestJS API Backend (NEW) ───────────────────────────
+  api:
+    image: ghcr.io/yasterlij/budget-api:v2.0.6
+    container_name: budget-api
+    restart: unless-stopped
+    user: "root"
+    expose:
+      - "4000"
+    env_file:
+      - /data-disk/applications/budget-app/.env
+    environment:
+      - API_PORT=4000
+      - API_HOST=0.0.0.0
+      - CORS_ORIGIN=http://localhost:8080,http://127.0.0.1:8080
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    depends_on:
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "deploy.ethiotelecom.et:196.189.51.118"
+
+  # ─── Next.js Frontend ───────────────────────────────────
   app:
-    image: ghcr.io/yasterlij/budget-app:v2.0.5
+    image: ghcr.io/yasterlij/budget-app:v2.0.6
     container_name: budget-app
     restart: unless-stopped
     user: "root"
     expose:
       - "3003"
     command: npm start
-
     env_file:
       - /data-disk/applications/budget-app/.env
-
+    environment:
+      # Tell Next.js to proxy /api/* to the NestJS API container
+      - API_BACKEND_URL=http://api:4000
     deploy:
       resources:
         limits:
           memory: 4G
-
     depends_on:
       redis:
         condition: service_healthy
-
+      api:
+        condition: service_started
     volumes:
       - uploads-data:/app/uploads
       - ./docker-entrypoint.sh:/app/scripts/docker-entrypoint.sh
-    extra_hosts:                          # ← ADD THESE TWO LINES
-      - "deploy.ethiotelecom.et:196.189.51.118"   # ← ADD
+    extra_hosts:
+      - "deploy.ethiotelecom.et:196.189.51.118"
 
+  # ─── BullMQ Workers (same image, different command) ────
+  worker:
+    image: ghcr.io/yasterlij/budget-app:v2.0.6
+    container_name: budget-upload-workers
+    restart: unless-stopped
+    user: "root"
+    command: ["node", "node_modules/tsx/dist/cli.mjs", "src/workers/index.ts"]
+    env_file:
+      - /data-disk/applications/budget-app/.env
+    environment:
+      - NODE_ENV=production
+      - WORKER_PROCESS=true
+      - NODE_OPTIONS=--max-old-space-size=4096
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads-data:/app/uploads
+    extra_hosts:
+      - "deploy.ethiotelecom.et:196.189.51.118"
+
+  # ─── Nginx Reverse Proxy ───────────────────────────────
   nginx-proxy:
     image: nginx:alpine
     container_name: budget-proxy
@@ -49,6 +101,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app
+      - api
 
 volumes:
   redis-data:
