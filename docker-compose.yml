@@ -15,7 +15,7 @@ services:
       - budget-net
 
   api:
-    image: ghcr.io/yasterlij/budget-api:v2.1.1
+    image: ghcr.io/yasterlij/budget-api:v2.1.2
     container_name: budget-api
     restart: unless-stopped
     user: "root"
@@ -38,7 +38,7 @@ services:
       - budget-net
 
   app:
-    image: ghcr.io/yasterlij/budget-app:v2.1.1
+    image: ghcr.io/yasterlij/budget-app:v2.1.2
     container_name: budget-app
     restart: unless-stopped
     user: "root"
@@ -65,7 +65,7 @@ services:
       - budget-net
 
   worker:
-    image: ghcr.io/yasterlij/budget-app:v2.1.1
+    image: ghcr.io/yasterlij/budget-app:v2.1.2
     container_name: budget-upload-workers
     restart: unless-stopped
     user: "root"
@@ -76,6 +76,7 @@ services:
       - NODE_ENV=production
       - WORKER_PROCESS=true
       - NODE_OPTIONS=--max-old-space-size=4096
+      - REDIS_URL=redis://redis:6379
     depends_on:
       redis:
         condition: service_healthy
