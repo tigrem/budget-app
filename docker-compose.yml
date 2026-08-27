@@ -42,8 +42,6 @@ services:
     command: npm start
     env_file:
       - /data-disk/applications/budget-app/.env
-    environment:
-      - API_BACKEND_URL=http://api:4000
     deploy:
       resources:
         limits:
