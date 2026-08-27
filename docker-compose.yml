@@ -19,13 +19,14 @@ services:
     container_name: budget-api
     restart: unless-stopped
     user: "root"
-    ports:
-      - "4000:4000"
+    expose:
+      - "4000"
     env_file:
       - /data-disk/applications/budget-app/.env
     environment:
       - API_PORT=4000
       - API_HOST=0.0.0.0
+      -REDIS_URL=redis://redis:6379
     depends_on:
       redis:
         condition: service_healthy
