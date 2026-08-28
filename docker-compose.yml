@@ -13,7 +13,7 @@ services:
       retries: 5
 
   app:
-    image: ghcr.io/yasterlij/budget-app:V2.1.4
+    image: ghcr.io/yasterlij/budget-app:V2.1.5
     container_name: budget-app
     restart: unless-stopped
     user: "root"
@@ -39,7 +39,7 @@ services:
       - "deploy.ethiotelecom.et:196.189.51.118"
 
   worker:
-    image: ghcr.io/yasterlij/budget-app:V2.1.4
+    image: ghcr.io/yasterlij/budget-app:V2.1.5
     container_name: budget-upload-workers
     restart: unless-stopped
     user: "root"
