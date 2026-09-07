@@ -27,6 +27,8 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - NODE_ENV=production
+      - EMPLOYEE_API_BASE_URL=http://10.190.149.243:30030/api/v1/users
+      - AUTH_TOKEN=89b4873d0faa568ba43d46fead82092a7c40c999e3209decc9b22cb637330199
     deploy:
       resources:
         limits:
