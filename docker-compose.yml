@@ -38,7 +38,7 @@ services:
       - uploads-data:/app/uploads
       - ./docker-entrypoint.sh:/app/scripts/docker-entrypoint.sh
     extra_hosts:
-      - "deploy.ethiotelecom.et:10.190.149.243"
+      - "deploy.ethiotelecom.et:196.189.51.118"
     networks:
       - budget-net
 
@@ -61,7 +61,7 @@ services:
     volumes:
       - uploads-data:/app/uploads
     extra_hosts:
-      - "deploy.ethiotelecom.et:10.190.149.243"
+      - "deploy.ethiotelecom.et:196.189.51.118"
     networks:
       - budget-net
 
