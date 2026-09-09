@@ -15,7 +15,7 @@ services:
       - budget-net
 
   app:
-    image: ghcr.io/yasterlij/budget-app:b7e33d47
+    image: ghcr.io/yasterlij/budget-app:8518c8da
     container_name: budget-app
     restart: unless-stopped
     user: "root"
@@ -45,7 +45,7 @@ services:
       - budget-net
 
   worker:
-    image: ghcr.io/yasterlij/budget-app:b7e33d47
+    image: ghcr.io/yasterlij/budget-app:8518c8da
     container_name: budget-upload-workers
     restart: unless-stopped
     user: "root"
